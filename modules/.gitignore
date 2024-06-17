@@ -1,5 +1,10 @@
-funciones.mod
+*.mod
+*.exe
+
 modules.f90
-mimodulo.mod
-work_file.exe
 work_file.f90
+gompertz.f90
+logistic.f90
+Von_Ber.f90
+Implem.f90
+comparate.f90
