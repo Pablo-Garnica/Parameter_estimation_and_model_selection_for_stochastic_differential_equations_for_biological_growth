@@ -2,18 +2,19 @@ module mle
     implicit none
 contains
     !Gompertz
-    subroutine OU(npoints,path,pOU)
-        implicit none
-        integer npoints
-        real*8 path(npoints),pOU(npoints)
-        pOU(:)=LOG(path(:))       
-        return
-    end subroutine
+    ! subroutine OU(npoints,path,pOU)
+    !     implicit none
+    !     integer npoints
+    !     real*8 path(npoints),pOU(npoints)
+    !     pOU(:)=LOG(path(:))       
+    !     return
+    ! end subroutine
     subroutine MLE_G(path,delta,npoints,sigmahat,bhat)
         implicit none
         integer npoints
         real*8 delta,sigmahat,bhat
         real*8 path(npoints),j,k,dem,num,h
+        path(:)=LOG(path(:))  
         num=((npoints-1)*SUM(path(1:(npoints-1))*path(2:npoints))-SUM(path(2:npoints))*SUM(path(1:(npoints-1))))
         dem=((npoints-1)*SUM(path(1:(npoints-1))**2)-SUM(path(1:(npoints-1)))**2)
         j=num/dem
