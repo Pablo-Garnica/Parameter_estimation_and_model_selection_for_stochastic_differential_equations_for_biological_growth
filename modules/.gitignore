@@ -1,6 +1,6 @@
 *.mod
 *.exe
-
+*.o
 modules.f90
 work_file.f90
 gompertz.f90

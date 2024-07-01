@@ -1,6 +1,6 @@
 module qua
+    use integral
     implicit none
-    
 contains
     subroutine Qua_Var_L(npoints,path,delta,sigmahat)
         implicit none

@@ -1,4 +1,6 @@
 module mle
+  use integral
+  use simulation
     implicit none
 contains
     !Gompertz
@@ -61,7 +63,7 @@ contains
         enddo
         return
       end subroutine
-      subroutine trans_geo_brown(linf,npoints,path,geo_brown)
+    subroutine trans_geo_brown(linf,npoints,path,geo_brown)
         implicit none
         integer npoints
         real*8 path(npoints),linf,geo_brown(npoints)
