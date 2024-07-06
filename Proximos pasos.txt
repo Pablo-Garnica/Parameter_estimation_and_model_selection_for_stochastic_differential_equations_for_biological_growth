@@ -1,0 +1,10 @@
+Documentación de tipos inputs y ouputs
+Aplicación de consola para ver que modelo se quiere ejecutar
+Semilla aleatorea
+Ejecución paralelo
+__________________________________________
+Duda Documentación
+MilsteinStep que es sigma
+DriftParameter_G que es beta
+DriftParameter_L que es r
+DriftParameter_V que es kappa
