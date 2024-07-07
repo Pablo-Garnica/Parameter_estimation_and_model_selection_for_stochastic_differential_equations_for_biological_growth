@@ -1,8 +1,9 @@
-1 Documentación de tipos inputs y ouputs | falta
+1 Documentación de tipos inputs y ouputs | Dudas
 2 Ejecutar desde execute | Ok
-3 Semilla aleatorea
-4 Aplicación de consola para ver que modelo se quiere ejecutar
-5 Ejecución paralelo
+3 Semilla aleatorea | Ok
+4 Aplicación de consola para ver que modelo se quiere ejecutar | En proceso
+5 Exportar simulación | Por iniciar
+6 Ejecución paralelo | Por iniciar
 __________________________________________
 Duda Documentación
 MilsteinStep que es sigma
@@ -12,3 +13,10 @@ DriftParameter_V que es kappa
 MLE_times,trans_geo_brown, MLE_GB Que hacen o en que parte del articulo estan?
 __________________________________________
 Falta terminar de documentar el modulo qua y aic
+__________________________________________
+Posiblemete sigmahat en Gompertz que viene de MLE_G en realidad deberia de venir de qua
+Cambiar MLE_G por MLE_b y Qua_Var_G
+Hacer un funcion MLE que regrese el estimador rhat,bhat,kappahat
+Hacer una funcion Qua_Var que regrese el estimador sigmahat
+Factorizar la Aplicación de consola para hacerlo un modulo
+Argregar la parte de aic a la aplicación de consola
