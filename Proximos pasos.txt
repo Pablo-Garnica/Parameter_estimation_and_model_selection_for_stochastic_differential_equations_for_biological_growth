@@ -1,10 +1,14 @@
-Documentación de tipos inputs y ouputs
-Aplicación de consola para ver que modelo se quiere ejecutar
-Semilla aleatorea
-Ejecución paralelo
+1 Documentación de tipos inputs y ouputs
+2 Ejecutar desde Makefile
+3 Semilla aleatorea
+4 Aplicación de consola para ver que modelo se quiere ejecutar
+5 Ejecución paralelo
 __________________________________________
 Duda Documentación
 MilsteinStep que es sigma
 DriftParameter_G que es beta
 DriftParameter_L que es r
 DriftParameter_V que es kappa
+MLE_times,trans_geo_brown, MLE_GB Que hacen o en que parte del articulo estan?
+__________________________________________
+Falta terminar de documentar el modulo qua y aic

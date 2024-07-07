@@ -3,9 +3,20 @@ module qua
     implicit none
 contains
     subroutine Qua_Var_L(npoints,path,delta,sigmahat)
+        !-------------------------------------------------------------------
+        !> \brief Calcula ???
+        ! 
+        !> \param[in] npoints(integer)
+        !> \param[in] path(real*8)
+        !> \param[in] delta(real*8)
+        !> \param[out] sigmahat(real*8)
+        !-------------------------------------------------------------------
         implicit none
-        integer :: npoints,i
-        real*8 :: sigmahat,path(npoints),delta,num,dem
+        integer, intent(in) :: npoints
+        real*8, intent(in)  :: delta
+        real*8, intent(out)  :: sigmahat
+        real*8 :: path(npoints),num,dem
+        integer :: i
         num=0.0
         dem=0.0
         do i=2,npoints
@@ -16,9 +27,21 @@ contains
         return
     end subroutine
     subroutine Qua_Var_VB(npoints,path,delta,linf,sigmahat)
+        !-------------------------------------------------------------------
+        !> \brief Calcula ???
+        ! 
+        !> \param[in] npoints(integer)
+        !> \param[in] path(real*8)
+        !> \param[in] delta(real*8)
+        !> \param[in] linf(real*8)
+        !> \param[out] sigmahat(real*8)
+        !-------------------------------------------------------------------
         implicit none
-        integer npoints,i
-        real*8 sigmahat,path(npoints),delta,num,dem,linf,pathint(npoints)
+        integer, intent(in) :: npoints
+        real*8, intent(in)  :: delta,linf
+        real*8, intent(out)  :: sigmahat
+        real*8 :: path(npoints),num,dem,pathint(npoints)
+        integer :: i
         num=0.0
         pathint(:)=(linf-path(:))**2
         call Integrate(npoints,pathint,delta,dem)

@@ -257,8 +257,8 @@ module simulation
         !> \param[in] sigma(real*8) Valor la ????
         !> \param[in] delta(real*8) Incremento del proceso de Wiener
         !> \param[in] x(real*8) Valor inicial en el que se evalua el modelo
-        !> \param[in] npoints() 
-        !> \param[out] path()
+        !> \param[in] npoints(integer) Tamaño de la simulación
+        !> \param[out] path(real*8) Matriz de valores de la simulación
         !> \param[in][optional] linf(real*8) Limite superior
         !-------------------------------------------------------------------
         implicit none
