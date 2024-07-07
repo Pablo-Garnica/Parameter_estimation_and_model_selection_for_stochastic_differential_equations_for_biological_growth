@@ -6,7 +6,7 @@ contains
         !> \brief Fija la semilla aleatorea
         !>
         !> \param[in] seed(integer) Valor en el que se fija la semilla 
-        !> aleatoria
+        !>aleatoria
         !-------------------------------------------------------------------
         implicit none
         integer, intent(in) :: seed
