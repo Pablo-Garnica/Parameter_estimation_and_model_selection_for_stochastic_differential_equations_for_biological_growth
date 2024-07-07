@@ -1,5 +1,5 @@
-1 Documentación de tipos inputs y ouputs
-2 Ejecutar desde Makefile
+1 Documentación de tipos inputs y ouputs | falta
+2 Ejecutar desde execute | Ok
 3 Semilla aleatorea
 4 Aplicación de consola para ver que modelo se quiere ejecutar
 5 Ejecución paralelo
