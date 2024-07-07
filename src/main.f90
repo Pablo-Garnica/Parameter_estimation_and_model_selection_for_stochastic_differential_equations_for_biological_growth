@@ -1,9 +1,12 @@
 program main
+    use rand_seed
     use simulation
     use mle
     use qua
     use aic
     implicit none
+    integer :: seed
+
     real*8 :: unif_val, box_m, n_var
     !Browlian step
     real*8 :: delta,startx,endx
@@ -19,6 +22,10 @@ program main
     real*8 :: b,kappa,r
     real*8 :: aic_
     real*8,allocatable :: path(:),pathkappahat(:),pathsigmahat(:)
+    !Semilla aleatorea
+    seed = 1234
+    call random_seed_set_up(seed)
+    !
     size = 5
     npoints = 10
     linf = 999999999.0

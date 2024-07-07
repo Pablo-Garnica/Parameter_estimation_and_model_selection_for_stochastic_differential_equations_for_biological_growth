@@ -1,5 +1,6 @@
 #!/bin/bash
 mkdir build
+gfortran -c -Jbuild -o build/rand_seed.o modules/rand_seed.f90
 gfortran -c -Jbuild -o build/integral.o modules/integral.f90
 gfortran -c -Jbuild -o build/simulation.o modules/simulation.f90
 gfortran -c -Jbuild -o build/qua.o modules/qua.f90   
