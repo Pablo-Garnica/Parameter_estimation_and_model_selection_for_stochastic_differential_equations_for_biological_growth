@@ -240,7 +240,7 @@ module simulation
         endif
         return
     end subroutine
-    subroutine SIM(type,beta,sigma,delta,x,npoints,path,linf)
+    subroutine SIM(type,param,sigma,delta,x,npoints,path,linf)
         !-------------------------------------------------------------------
         !> \brief Calcula la resolución de las ecuaciones estocasticas de 
         !> los modelos
@@ -250,10 +250,10 @@ module simulation
         !>   "v" : Para el modelo Von Bert
         !>   "g" : Para el modelo Gompertz
         !>   "l" : Para el modelo Logistic
-        !> \param[in] beta(real*8) Valor de ??? si type es:
-        !>   "v" : beta es en realidad el valor kappa
-        !>   "g" : beta es bet 
-        !>   "l" : beta es en realidad el valor r
+        !> \param[in] param(real*8) Valor de ??? si type es:
+        !>   "v" : param es en realidad el valor kappa
+        !>   "g" : param es beta
+        !>   "l" : param es en realidad el valor r
         !> \param[in] sigma(real*8) Valor la ????
         !> \param[in] delta(real*8) Incremento del proceso de Wiener
         !> \param[in] x(real*8) Valor inicial en el que se evalua el modelo
@@ -263,7 +263,7 @@ module simulation
         !-------------------------------------------------------------------
         implicit none
         character, intent(in) :: type
-        real*8, intent(in) :: beta,sigma,delta,x
+        real*8, intent(in) :: param,sigma,delta,x
         integer, intent(in) :: npoints
         real*8, intent(out) :: path(npoints)
         real*8, intent(in) , optional :: linf
@@ -277,7 +277,7 @@ module simulation
         !
         path(1)=x
         do i=2,npoints
-            call DriftParam(type,beta,path(i-1),y1,inf)
+            call DriftParam(type,param,path(i-1),y1,inf)
             call DiffusionParam(type,sigma,path(i-1),y2,inf)
             call MilsteinStep(delta,path(i-1),y1,y2,sigma,path(i))
         enddo

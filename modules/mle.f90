@@ -3,7 +3,7 @@ module mle
   use simulation
     implicit none
 contains
-    subroutine MLE_G(path,delta,npoints,sigmahat,bhat)
+      subroutine MLE_b(npoints,path,delta,bhat)
         !-------------------------------------------------------------------
         !> \brief Calcula de MLE (Maximum Likelihood Estimator) para el
         !> modelo Gompertz
@@ -12,25 +12,21 @@ contains
         !> differential equation)
         !> \param[in] delta(real*8) Incremento del proceso de Wiener
         !> \param[in] npoints(integer) Numero de observaciones
-        !> \param[out] sigmahat(real*8) Estimador sigma
         !> \param[out] bhat(real*8) Estimado b
         !-------------------------------------------------------------------
         implicit none
         integer, intent(in) :: npoints
         real*8, intent(in) :: delta
-        real*8, intent(out) :: sigmahat,bhat
-        real*8 :: j,k,dem,num,h,path(npoints)
+        real*8, intent(out) :: bhat
+        real*8 :: j,dem,num,path(npoints)
         path(:)=LOG(path(:))  
         num=((npoints-1)*SUM(path(1:(npoints-1))*path(2:npoints))-SUM(path(2:npoints))*SUM(path(1:(npoints-1))))
         dem=((npoints-1)*SUM(path(1:(npoints-1))**2)-SUM(path(1:(npoints-1)))**2)
         j=num/dem
-        k=(j*SUM(path(1:(npoints-1)))-SUM(path(2:npoints)))/(npoints-1)
-        h=SUM((path(2:npoints)-j*path(1:npoints-1)+k)**2)/(npoints-1)
         bhat=-LOG(j)/delta
-        sigmahat=SQRT((h*2*bhat)/(1-EXP(-2*bhat*delta)))      
         return
     end subroutine
-    subroutine MLE_r(delta,npoints,path,rhat)
+    subroutine MLE_r(npoints,path,delta,rhat)
         !-------------------------------------------------------------------
         !> \brief Calcula de MLE (Maximum Likelihood Estimator) para el
         !> modelo Logistico
@@ -51,7 +47,7 @@ contains
         rhat=I1/I2
         return
     end subroutine
-    subroutine MLE_kappa(delta,linf,npoints,pathlam,kappahat)
+    subroutine MLE_kappa(npoints,path,delta,linf,kappahat)
         !-------------------------------------------------------------------
         !> \brief Calcula de MLE (Maximum Likelihood Estimator) para el
         !> modelo Von Bert
@@ -59,7 +55,7 @@ contains
         !> \param[in] delta(real*8) Incremento del proceso de Wiener
         !> \param[in] linf(real*8) Limite superior
         !> \param[in] npoints(integer) Numero de observaciones
-        !> \param[in] pathlam(real*8) Observaciones de la SDE (stochastic 
+        !> \param[in] path(real*8) Observaciones de la SDE (stochastic 
         !> differential equation)
         !> \param[out] kappahat(real*8) Estimador kappa
         !-------------------------------------------------------------------
@@ -67,10 +63,10 @@ contains
         real*8, intent(in) :: delta, linf
         integer, intent(in) :: npoints
         real*8, intent(out) :: kappahat
-        real*8 :: pathlam(npoints),I1,pathint(npoints),time
+        real*8 :: path(npoints),I1,pathint(npoints),time
         time=delta*(npoints-1)
-        pathint(:)=1.0/(linf-pathlam(:))
-        call ItoIntegrate(npoints,pathint,pathlam,I1)
+        pathint(:)=1.0/(linf-path(:))
+        call ItoIntegrate(npoints,pathint,path,I1)
         kappahat=I1/time
         return
     end subroutine
@@ -146,4 +142,48 @@ contains
           kappahat=-((a-b)/(delta*(npoints-1))+(sigmahat**2)/2)
           return
     end subroutine
+    subroutine MLE_(type_model,npoints,path,delta,paramhat,linf)
+      !-------------------------------------------------------------------
+      !> \brief Calcula MLE (Maximum Likelihood Estimator) para
+      !> los modelos
+      ! 
+      !> \param[in] type_model(character) Debe de estar en los siguientes 
+      !> valores:
+      !>   "v" : Para el modelo Von Bert
+      !>   "g" : Para el modelo Gompertz
+      !>   "l" : Para el modelo Logistic
+      !> \param[in] npoints(integer) Numero de observaciones
+      !> \param[in] path(real*8) Observaciones de la SDE (stochastic 
+      !> differential equation)
+      !> \param[in] delta(real*8) Incremento del proceso de Wiener
+      !> \param[out] paramhat(real*8) Valor de ??? si type_model es:
+      !>   "v" : paramhat es en realidad el valor kappahat
+      !>   "g" : paramhat es bhat
+      !>   "l" : paramhat es en realidad el valor rhat
+      !> \param[in][optional] linf(real*8) Limite superior
+      !-------------------------------------------------------------------
+      implicit none
+      character, intent(in) :: type_model
+      integer, intent(in) :: npoints
+      real*8 :: path(npoints)
+      real*8, intent(in) :: delta
+      real*8, intent(out) :: paramhat
+      real*8, intent(in) , optional :: linf
+      real*8 :: inf
+      if (present(linf)) then
+          inf = linf
+      else
+          inf = 999999999999999999999999999999.00
+      end if
+      if (type_model.eq."g") then
+          call MLE_b(npoints,path,delta,paramhat)
+      else if (type_model.eq."l") then
+          call MLE_r(npoints,path,delta,paramhat)
+      else if (type_model.eq."v") then
+          call MLE_kappa(npoints,path,delta,inf,paramhat)
+      else
+          print *, "Error"
+      end if
+      return
+  end subroutine
 end module mle
