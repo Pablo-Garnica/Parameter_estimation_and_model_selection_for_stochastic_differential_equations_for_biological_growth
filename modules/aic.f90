@@ -25,7 +25,7 @@ contains
         aic=-2*(I1-I2/2)
         return
     end subroutine
-    subroutine AIC_VON(delta,kappa,sigma,linf,npoints,path,aic)
+    subroutine AIC_VON(delta,kappa,sigma,npoints,path,aic,linf)
         !-------------------------------------------------------------------
         !> \brief Calcula ???
         ! 
@@ -38,11 +38,17 @@ contains
         !> \param[out] aic(real*8)
         !-------------------------------------------------------------------
         implicit none
-        real*8, intent(in) :: delta,kappa,sigma,linf
+        real*8, intent(in) :: delta,kappa,sigma
         integer, intent(in) :: npoints
         real*8, intent(out) :: aic
-        real*8 :: path(npoints),I1,I2,pathint1(npoints),pathint2(npoints)
-        pathint1(:)=kappa/((sigma**2)*(linf-path(:)))
+        real*8, intent(in), optional  :: linf
+        real*8 :: path(npoints),I1,I2,pathint1(npoints),pathint2(npoints),inf
+        if (present(linf)) then
+            inf = linf
+        else
+            inf = 999999999999999999999999999999.00
+        end if
+        pathint1(:)=kappa/((sigma**2)*(inf-path(:)))
         pathint2(:)=(kappa**2)/(sigma**2)
         call ItoIntegrate(npoints,pathint1,path,I1)
         call Integrate(npoints,pathint2,delta,I2)
@@ -70,6 +76,29 @@ contains
         call ItoIntegrate(npoints,pathint1,path,I1)
         call Integrate(npoints,pathint2,delta,I2)
         aic=-2*(I1-I2/2)
+    return
+    end subroutine
+    subroutine AIC_(type_model,delta,param,sigma,npoints,path,aic_param,linf)
+        character, intent(in) :: type_model
+        real*8, intent(in) :: delta,param,sigma
+        integer, intent(in) :: npoints
+        real*8, intent(out) :: aic_param
+        real*8, intent(in), optional  :: linf
+        real*8 :: path(npoints),inf
+        if (present(linf)) then
+            inf = linf
+        else
+            inf = 999999999999999999999999999999.00
+        end if
+        if (type_model.eq."g") then
+            call AIC_GOM(delta,param,sigma,npoints,path,aic_param)
+        else if (type_model.eq."l") then
+            call AIC_LOG(delta,param,sigma,npoints,path,aic_param)
+        else if (type_model.eq."v") then
+            call AIC_VON(delta,param,sigma,npoints,path,aic_param,linf)
+        else
+            print *, "Error"
+        end if
     return
     end subroutine
 end module aic

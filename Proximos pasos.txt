@@ -1,9 +1,9 @@
 1 Documentación de tipos inputs y ouputs | Dudas
 2 Ejecutar desde execute | Ok
 3 Semilla aleatorea | Ok
-4 Aplicación de consola para ver que modelo se quiere ejecutar | En proceso
-5 Ejecución paralelo | Por iniciar
-6 Exportar simulación | Por iniciar (checar el archivo parallel_example.f90)
+4 Aplicación de consola para ver que modelo se quiere ejecutar | Dudas
+5 Ejecución paralelo | Dudas (checar el archivo parallel_example.f90)
+6 Exportar simulación | Por iniciar
 __________________________________________
 Duda Documentación
 MilsteinStep que es sigma
@@ -11,7 +11,8 @@ DriftParameter_G que es beta
 DriftParameter_L que es r
 DriftParameter_V que es kappa
 MLE_times,trans_geo_brown, MLE_GB Que hacen o en que parte del articulo estan?
+En la aplicación de consola en que valores debe de estar el parametro y el valor recomendado
+En que parte se debe de hacer la Ejecución en paralelo, es necesario un for para realizarlo
 __________________________________________
-Falta terminar de documentar el modulo qua y aic
-Argregar la parte de aic a la aplicación de consola
-Argregar opcion en la aplicación de consola par configuracion de parametros por default
+Falta terminar de documentar el modulo qua, aic, menú
+Crear modulo export_model
