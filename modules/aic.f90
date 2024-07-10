@@ -4,14 +4,15 @@ module aic
 contains
     subroutine AIC_GOM(delta,b,sigma,npoints,path,aic)
         !-------------------------------------------------------------------
-        !> \brief Calcula ???
+        !> \brief Calcula el valor del AIC (Akaike information criterion)
+        !> para el modelo Gompertz
         ! 
-        !> \param[in] delta(real*8)
-        !> \param[in] b(real*8)
-        !> \param[in] sigma(real*8)
-        !> \param[in] npoints(integer)
-        !> \param[in] path(real*8)
-        !> \param[out] aic(real*8)
+        !> \param[in] delta(real*8) Incremento del proceso de Wiener
+        !> \param[in] b(real*8) ???
+        !> \param[in] sigma(real*8) Valor la ????
+        !> \param[in] npoints(integer) Tamaño de la simulación
+        !> \param[in] path(real*8) Matriz donde se guarda la simulación
+        !> \param[out] aic(real*8) Akaike information criterion
         !-------------------------------------------------------------------
         implicit none
         real*8, intent(in) :: delta,b,sigma
@@ -27,15 +28,16 @@ contains
     end subroutine
     subroutine AIC_VON(delta,kappa,sigma,npoints,path,aic,linf)
         !-------------------------------------------------------------------
-        !> \brief Calcula ???
-        ! 
-        !> \param[in] delta(real*8)
-        !> \param[in] kappa(real*8)
-        !> \param[in] sigma(real*8)
-        !> \param[in] linf(real*8)
-        !> \param[in] npoints(integer)
-        !> \param[in] path(real*8)
-        !> \param[out] aic(real*8)
+        !> \brief Calcula el valor del AIC (Akaike information criterion)
+        !> para el modelo Von Bert
+        !> 
+        !> \param[in] delta(real*8) Incremento del proceso de Wiener
+        !> \param[in] kappa(real*8) ????
+        !> \param[in] sigma(real*8) Valor la ????
+        !> \param[in] npoints(integer) Tamaño de la simulación
+        !> \param[in] path(real*8) Matriz donde se guarda la simulación
+        !> \param[out] aic(real*8) Akaike information criterion
+        !> \param[in] linf(real*8) Limite superior
         !-------------------------------------------------------------------
         implicit none
         real*8, intent(in) :: delta,kappa,sigma
@@ -57,14 +59,15 @@ contains
     end subroutine
     subroutine AIC_LOG(delta,r,sigma,npoints,path,aic)
         !-------------------------------------------------------------------
-        !> \brief Calcula ???
+        !> \brief Calcula el valor del AIC (Akaike information criterion)
+        !> para el modelo Logistico
         ! 
-        !> \param[in] delta(real*8)
-        !> \param[in] r(real*8)
-        !> \param[in] sigma(real*8)
-        !> \param[in] npoints(integer)
-        !> \param[in] path(real*8)
-        !> \param[out] aic(real*8)
+        !> \param[in] delta(real*8) Incremento del proceso de Wiener
+        !> \param[in] r(real*8) ????
+        !> \param[in] sigma(real*8) Valor la ????
+        !> \param[in] npoints(integer) Tamaño de la simulación
+        !> \param[in] path(real*8) Matriz donde se guarda la simulación
+        !> \param[out] aic(real*8) Akaike information criterion
         !-------------------------------------------------------------------
         implicit none
         real*8, intent(in) :: delta,r,sigma
@@ -79,6 +82,22 @@ contains
     return
     end subroutine
     subroutine AIC_(type_model,delta,param,sigma,npoints,path,aic_param,linf)
+        !-------------------------------------------------------------------
+        !> \brief Calcula el valor del AIC (Akaike information criterion)
+        ! 
+        !> \param[in] type(character) Debe de estar en los siguientes 
+        !> valores:
+        !>   "v" : Para el modelo Von Bert
+        !>   "g" : Para el modelo Gompertz
+        !>   "l" : Para el modelo Logistic
+        !> \param[in] delta(real*8) Incremento del proceso de Wiener
+        !> \param[in] kappa(real*8) ????
+        !> \param[in] param(real*8) Valor la ????
+        !> \param[in] npoints(integer) Tamaño de la simulación
+        !> \param[in] path(real*8) Matriz donde se guarda la simulación
+        !> \param[out] aic(real*8) Akaike information criterion
+        !> \param[in] linf(real*8) Limite superior
+        !-------------------------------------------------------------------
         character, intent(in) :: type_model
         real*8, intent(in) :: delta,param,sigma
         integer, intent(in) :: npoints

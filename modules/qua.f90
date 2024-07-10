@@ -4,8 +4,7 @@ module qua
 contains
     subroutine Qua_Var_G(npoints,path,delta,sigmahat)
         !-------------------------------------------------------------------
-        !> \brief Calcula de MLE (Maximum Likelihood Estimator) para el
-        !> modelo Gompertz
+        !> \brief Calcula de Quadratic variation para el modelo Gompertz
         ! 
         !> \param[in] npoints(integer) Numero de observaciones
         !> \param[in] path(real*8) Observaciones de la SDE (stochastic 
@@ -30,12 +29,13 @@ contains
     end subroutine
     subroutine Qua_Var_L(npoints,path,delta,sigmahat)
         !-------------------------------------------------------------------
-        !> \brief Calcula ???
+        !> \brief Calcula de Quadratic variation para el modelo Lofistic
         ! 
-        !> \param[in] npoints(integer)
-        !> \param[in] path(real*8)
-        !> \param[in] delta(real*8)
-        !> \param[out] sigmahat(real*8)
+        !> \param[in] npoints(integer) Numero de observaciones
+        !> \param[in] path(real*8) Observaciones de la SDE (stochastic 
+        !> differential equation)
+        !> \param[in] delta(real*8) Incremento del proceso de Wiener
+        !> \param[out] sigmahat(real*8) Estimador sigma
         !-------------------------------------------------------------------
         implicit none
         integer, intent(in) :: npoints
@@ -54,13 +54,14 @@ contains
     end subroutine
     subroutine Qua_Var_VB(npoints,path,delta,linf,sigmahat)
         !-------------------------------------------------------------------
-        !> \brief Calcula ???
+        !> \brief Calcula de Quadratic variation para el modelo Lofistic
         ! 
-        !> \param[in] npoints(integer)
-        !> \param[in] path(real*8)
-        !> \param[in] delta(real*8)
-        !> \param[in] linf(real*8)
-        !> \param[out] sigmahat(real*8)
+        !> \param[in] npoints(integer) Numero de observaciones
+        !> \param[in] path(real*8) Observaciones de la SDE (stochastic 
+        !> differential equation)
+        !> \param[in] delta(real*8) Incremento del proceso de Wiener
+        !> \param[in] linf(real*8) Limite superior
+        !> \param[out] sigmahat(real*8) Estimador sigma
         !-------------------------------------------------------------------
         implicit none
         integer, intent(in) :: npoints
@@ -79,7 +80,8 @@ contains
       end subroutine      
       subroutine Qua_Var(type_model,npoints,path,delta,sigmahat,linf)
         !-------------------------------------------------------------------
-        !> \brief Calcula ???
+        !> \brief Calcula de Quadratic variation para segun el modelo 
+        !> seleccionado
         ! 
         !> \param[in] type_model(character) Debe de estar en los siguientes 
         !> valores:
@@ -90,8 +92,8 @@ contains
         !> \param[in] path(real*8) Observaciones de la SDE (stochastic 
         !> differential equation)
         !> \param[in] delta(real*8) Incremento del proceso de Wiener
-        !> \param[out] sigmahat(real*8) ???
-        !> \param[in][optional] linf(real*8) Limite superior
+        !> \param[out] sigmahat(real*8) Estimador sigma
+        !> \param[in] linf(real*8) Limite superior
         !-------------------------------------------------------------------
         implicit none
         character, intent(in) :: type_model

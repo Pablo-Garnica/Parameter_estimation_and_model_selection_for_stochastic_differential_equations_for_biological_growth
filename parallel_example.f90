@@ -7,6 +7,8 @@
 ! mientras que shared(a, b, c, n) indica que las matrices a, b, c y la variable n son compartidas 
 ! entre todos los hilos.
 ! !$omp end parallel do: Marca el final de la región paralela.
+
+
 program parallel_example
     use omp_lib
     implicit none
