@@ -99,27 +99,27 @@ module menu
         if (type_model.eq."g") then
             name_model = "Gompertz"
             model_name_param = "beta"
-            param_recom = "(0,inf) valor recomendado 12.0"
-            sigma_recom = "(0,inf) valor recomendado 12.0"
-            delta_recom = "(0,inf) valor recomendado 12.0"
-            xstart_recom = "(0,inf) valor recomendado 12.0"
-            npoints_recom = "Natural mayor a 1 valor recomendado 100"
+            sigma_recom = "Valor recomendado 0.1"
+            param_recom = "Valor recomendado 0.6"
+            delta_recom = "Valor recomendado 0.001"
+            xstart_recom = "Valor recomendado 0.01"
+            npoints_recom = "Valor recomendado 10,000"
         else if (type_model.eq."l") then
             name_model = "Logistic"
             model_name_param = "r"
-            param_recom = "[50,inf) valor recomendado 7.0"
-            sigma_recom = "[50,inf) valor recomendado 7.0"
-            delta_recom = "[50,inf) valor recomendado 7.0"
-            xstart_recom = "[50,inf) valor recomendado 7.0"
-            npoints_recom = "Natural mayor a 1 valor recomendado 100"
+            sigma_recom = "Valor recomendado 0.1"
+            param_recom = "Valor recomendado 0.6"
+            delta_recom = "Valor recomendado 0.001"
+            xstart_recom = "Valor recomendado 0.01"
+            npoints_recom = "Valor recomendado 10,000"
         else if (type_model.eq."v") then
             name_model = "Von Bert"
             model_name_param = "kappa"
-            param_recom = "[10,inf) valor recomendado 0.203"
-            sigma_recom = "[10,inf) valor recomendado 0.203"
-            delta_recom = "[10,inf) valor recomendado 0.203"
-            xstart_recom = "[10,inf) valor recomendado 0.203"
-            npoints_recom = "Natural mayor a 1 valor recomendado 100"
+            sigma_recom = "Valor recomendado 0.1"
+            param_recom = "Valor recomendado 0.6"
+            delta_recom = "Valor recomendado 0.001"
+            xstart_recom = "Valor recomendado 0.01"
+            npoints_recom = "Valor recomendado 10,000"
         else
             print *, "Error"
         end if
@@ -181,7 +181,7 @@ module menu
         end if
         print *, "-------------------------------------------------------------------"
     end subroutine
-    subroutine menu_result(type_model,model_param,sigma,delta,xstart,npoints,linf,paramhat,sigmahat,aic_param)
+    subroutine menu_result(type_model,model_param,sigma,delta,xstart,npoints,linf,paramhat,sigmahat,aic_param,path)
         !-------------------------------------------------------------------
         !> \brief Calcula y muestra los valores MLE (Maximum Likelihood 
         !> Estimator), AIC (Akaike information criterion), Quadratic 
@@ -203,13 +203,14 @@ module menu
         !> \param[out] paramhat(real*8) ????
         !> \param[out] sigmahat(real*8) ????
         !> \param[out] aic_param(real*8) AIC (Akaike information criterion)
+        !> \param[out] Path de simulación
         !-------------------------------------------------------------------
         character, intent(in) :: type_model
         real*8, intent(in) :: model_param,sigma,delta,xstart
         integer, intent(in) :: npoints
         real*8, intent(in), optional :: linf
         real*8, intent(out) :: paramhat,sigmahat,aic_param
-        real*8 :: path(npoints)
+        real*8, intent(out) :: path(npoints)
         character*20 :: name_model,model_name_param
         character*100 :: param_recom,sigma_recom,delta_recom,xstart_recom,npoints_recom
         call dict_models(type_model,name_model,model_name_param, &

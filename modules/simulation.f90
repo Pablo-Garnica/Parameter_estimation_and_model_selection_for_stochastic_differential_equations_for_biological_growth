@@ -281,6 +281,7 @@ module simulation
             call DiffusionParam(type,sigma,path(i-1),y2,inf)
             call MilsteinStep(delta,path(i-1),y1,y2,sigma,path(i))
         enddo
+        ! print*,path
         return
     end subroutine
 end module simulation

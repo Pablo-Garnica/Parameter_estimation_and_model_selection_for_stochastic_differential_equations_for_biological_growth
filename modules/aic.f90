@@ -8,7 +8,7 @@ contains
         !> para el modelo Gompertz
         ! 
         !> \param[in] delta(real*8) Incremento del proceso de Wiener
-        !> \param[in] b(real*8) ???
+        !> \param[in] b(real*8) beta
         !> \param[in] sigma(real*8) Valor la ????
         !> \param[in] npoints(integer) Tamaño de la simulación
         !> \param[in] path(real*8) Matriz donde se guarda la simulación

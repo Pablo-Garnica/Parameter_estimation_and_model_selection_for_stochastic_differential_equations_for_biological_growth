@@ -23,7 +23,7 @@ program main
     param_recom,sigma_recom,delta_recom,xstart_recom,npoints_recom)
     call menu_input_param(type_model,model_param,sigma,delta,xstart,npoints,linf)
     allocate(path(npoints))
-    call menu_result(type_model,model_param,sigma,delta,xstart,npoints,linf,paramhat,sigmahat,aic_param)
+    call menu_result(type_model,model_param,sigma,delta,xstart,npoints,linf,paramhat,sigmahat,aic_param,path)
     call menu_export(type_model,path,npoints)
     deallocate(path)
 end program main

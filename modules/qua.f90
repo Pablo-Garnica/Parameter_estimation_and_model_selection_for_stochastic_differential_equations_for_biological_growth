@@ -16,15 +16,15 @@ contains
         integer, intent(in) :: npoints
         real*8, intent(in) :: delta
         real*8, intent(out) :: sigmahat
-        real*8 :: bhat,j,k,dem,num,h,path(npoints)
-        path(:)=LOG(path(:))  
-        num=((npoints-1)*SUM(path(1:(npoints-1))*path(2:npoints))-SUM(path(2:npoints))*SUM(path(1:(npoints-1))))
-        dem=((npoints-1)*SUM(path(1:(npoints-1))**2)-SUM(path(1:(npoints-1)))**2)
+        real*8 :: bhat,j,k,dem,num,h,path(npoints),lpath(npoints)
+        lpath(:)=LOG(path(:))
+        num=((npoints-1)*SUM(lpath(1:(npoints-1))*lpath(2:npoints))-SUM(lpath(2:npoints))*SUM(lpath(1:(npoints-1))))
+        dem=((npoints-1)*SUM(lpath(1:(npoints-1))**2.0)-SUM(lpath(1:(npoints-1)))**2.0)
         j=num/dem
-        k=(j*SUM(path(1:(npoints-1)))-SUM(path(2:npoints)))/(npoints-1)
-        h=SUM((path(2:npoints)-j*path(1:npoints-1)+k)**2)/(npoints-1)
+        k=(j*SUM(lpath(1:(npoints-1)))-SUM(lpath(2:npoints)))/(npoints-1)
+        h=SUM((lpath(2:npoints)-j*lpath(1:npoints-1)+k)**2.0)/(npoints-1)
         bhat=-LOG(j)/delta
-        sigmahat=SQRT((h*2*bhat)/(1-EXP(-2*bhat*delta)))      
+        sigmahat=SQRT((h*2.0*bhat)/(1.0-EXP(-2.0*bhat*delta)))
         return
     end subroutine
     subroutine Qua_Var_L(npoints,path,delta,sigmahat)

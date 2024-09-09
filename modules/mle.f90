@@ -18,10 +18,10 @@ contains
         integer, intent(in) :: npoints
         real*8, intent(in) :: delta
         real*8, intent(out) :: bhat
-        real*8 :: j,dem,num,path(npoints)
-        path(:)=LOG(path(:))  
-        num=((npoints-1)*SUM(path(1:(npoints-1))*path(2:npoints))-SUM(path(2:npoints))*SUM(path(1:(npoints-1))))
-        dem=((npoints-1)*SUM(path(1:(npoints-1))**2)-SUM(path(1:(npoints-1)))**2)
+        real*8 :: j,dem,num,path(npoints),lpath(npoints)
+        lpath(:)=LOG(path(:))
+        num=((npoints-1)*SUM(lpath(1:(npoints-1))*lpath(2:npoints))-SUM(lpath(2:npoints))*SUM(lpath(1:(npoints-1))))
+        dem=((npoints-1)*SUM(lpath(1:(npoints-1))**2)-SUM(lpath(1:(npoints-1)))**2)
         j=num/dem
         bhat=-LOG(j)/delta
         return
