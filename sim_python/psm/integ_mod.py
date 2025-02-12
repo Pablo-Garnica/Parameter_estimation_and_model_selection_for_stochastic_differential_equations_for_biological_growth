@@ -3,20 +3,11 @@ import numpy as np
 def integrate(array, delta):
     """
     Calcula la integral de Riemann utilizando la regla del trapecio.
-
-    Parameters
-    ----------
-    npoints : int
-        Tamaño del arreglo de valores sobre el cual se calculará la integral
-    path : numpy.ndarray
-        Array de valores (imagen de la función) sobre los cuales se calculará la integral
-    delta : float
-        Distancia entre las particiones (se asumió partición uniforme)
-
-    Returns
-    -------
-    integral : float
-        Resultado de la integral de Riemann
+    Parameters:
+        array (np.array): Array de trayectoria
+        delta (float): Incremento del proceso de Wiener
+    Returns:
+        float: Resultado de la integral de Riemann
     """
     # Calcula los términos promedios entre puntos consecutivos
     array_avg = (array[:-1] + array[1:]) / 2.0  # Promedio de cada subintervalo
@@ -27,20 +18,12 @@ def integrate(array, delta):
 def ito_integrate(array_x,array_w):
     """
     Calcula la integral de Itô utilizando la fórmula de diferencias finitas.
-
     Parameters
-    ----------
-    npoints : int
-        Tamaño del arreglo de valores sobre el cual se calculará la integral
-    path : numpy.ndarray
-        Array de valores (dominio de la función) sobre los cuales se calculará la integral
-    W : numpy.ndarray
-        Array de valores (imagen de la función) sobre los cuales se calculará la integral
-
+        array_x (np.array): Array de trayectoria
+        array_w (np.array): Array de trayectoria aplicando la funcion 
+            definida por el modelo
     Returns
-    -------
-    integral : float
-        Resultado de la integral de Itô
+    float Resultado de la integral de Itô
     """
     # Diferencias sucesivas de W
     delta_w = np.diff(array_w)

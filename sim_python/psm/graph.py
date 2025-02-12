@@ -8,6 +8,21 @@ from psm.mle_mod import  mle_
 from psm.qua_mod import  qua_var
 #________________________________________________
 def plt_sim(array,delta,title,y_title,plt_type =None, y_line_val=None,zoom=True,flg_export=False):
+    """
+    Crea la base grafico con los valores del eje y, el eje 
+    x es el indice 
+    Parameters:
+        array (np.array): Array que se quiere graficar
+        delta (float): Incremento del proceso de Wiener
+        title (str): Titulo del grafico
+        y_title: Titulo del eje y
+        plt_type: Nombre del archivo png
+        y_line_val(float): Valor linea horizontal
+        zoom(bool): Si es True realiza zoom con el 99% de datos
+        flg_export(bool): Si es True esporta la en formato png
+    Returns:
+        objeto plt.subplots relacionado al grafico
+    """
     df = pd.DataFrame(array)
     y = df[0]
     x = (df.index)*delta
@@ -36,6 +51,15 @@ def plt_sim(array,delta,title,y_title,plt_type =None, y_line_val=None,zoom=True,
     return fig, ax
 #________________________________________________
 def get_d_sim(d_exe,d_f):
+    """
+    Diccionario configuración para plt_sim
+    Parameters:
+        d_exe (dict): Diccionario outpt de parametros generales 
+            en el flujo de ejcucion de flow
+        d_f (dict): Diccionario de resultado de trayectorias
+    Returns:
+        dict Diccionario configuración para plt_sim
+    """
     d_plt = {
         'array' : pd.Series(d_f.get('array_0')),
         'delta' : d_exe.get('delta'),
@@ -45,6 +69,16 @@ def get_d_sim(d_exe,d_f):
     return d_plt
 #________________________________________________
 def get_d_sig(d_exe,d_f):
+    """
+    Diccionario configuración para plt_sim
+    Parameters:
+        d_exe (dict): Diccionario outpt de parametros generales 
+            en el flujo de ejcucion de flow
+        d_f (dict): Diccionario de resultado de trayectorias
+    Returns:
+        diccionario Configuración para plt_sim 
+        para el grafico de estimador sigma
+    """
     ss = pd.Series(d_f.get('array_0'))
     type_dif = d_exe['type_dif']
     delta = d_exe.get('delta')
@@ -63,6 +97,17 @@ def get_d_sig(d_exe,d_f):
     return d_plt
 #________________________________________________
 def get_d_par(d_exe,d_f):
+    """
+    Diccionario configuración para plt_sim
+    Parameters:
+        d_exe (dict): Diccionario outpt de parametros generales 
+            en el flujo de ejcucion de flow
+        d_f (dict): Diccionario de resultado de trayectorias
+    Returns:
+        diccionario Configuración para plt_sim 
+        para el grafico de estimador del parametro 
+        segun el modelo
+    """
     ss = pd.Series(d_f.get('array_0'))
     type_dif = d_exe['type_dif']
     delta = d_exe.get('delta')
@@ -81,6 +126,21 @@ def get_d_par(d_exe,d_f):
     return d_plt
 #________________________________________________
 def get_d_info(plt_type,d_exe,d_f):
+    """
+    Diccionario configuración para plt_sim, segun el tipo de grafico
+
+    Parameters:
+        plt_type(str): Tipo de grafico
+            - sim: Simulacion
+            - sig: Sigma
+            - par: Parametro
+        d_exe (dict): Diccionario outpt de parametros generales 
+            en el flujo de ejcucion de flow
+        d_f (dict): Diccionario de resultado de trayectorias
+    Returns:
+        diccionario Configuración para plt_sim 
+        para el grafico segun el tipo
+    """
     if plt_type == 'sim':
         return get_d_sim(d_exe,d_f)
     if plt_type == 'sig':
@@ -91,6 +151,22 @@ def get_d_info(plt_type,d_exe,d_f):
         return {}
 #________________________________________________
 def json_extract(data,type_data,d_exe,d_f,flg_export=False):
+    """
+    Diccionario configuración output con informacion de 
+    la simulacion segun el tipo
+    Parameters:
+        plt_type(str): Tipo de grafico
+            - sim: Simulacion
+            - sig: Sigma
+            - par: Parametro
+        d_exe (dict): Diccionario outpt de parametros generales 
+            en el flujo de ejcucion de flow
+        d_f (dict): Diccionario de resultado de trayectorias
+        flg_export(bool): Indica si se exporta en formato json
+    Returns:
+        Diccionario configuración output con informacion de 
+        la simulacion segun el tipo
+    """
     d_json = {
         'model':d_exe['d_flow'].get('type_dif'),
         'type_data':type_data,
@@ -110,9 +186,26 @@ def json_extract(data,type_data,d_exe,d_f,flg_export=False):
         with open(name_file, "w", encoding="utf-8") as archivo:
             json.dump(d_json, archivo, indent=4, ensure_ascii=False,default=lambda x: None if x is np.nan else x)
         return d_json
-
 #________________________________________________
 def get_d_plt(type_dif,array,delta,type_graph,y_val=None,l_inf=9999999999.0):
+    """
+    Diccionario configuración para plt_sim
+    Parameters:
+        type_dif('g'|'l'|'v'): Tipo de modelo
+            g:Gompertz
+            l:Logistic
+            v:Von Bert
+        array (np.array): Array que se quiere graficar
+        delta (float): Incremento del proceso de Wiener
+        type_graph(str): Tipo de grafico
+            - sim: Simulacion
+            - sig: Sigma
+            - par: Parametro
+        y_val(float): Valor linea horizontal
+        l_inf (float): Limite superior
+    Returns:
+        Diccionario configuración para plt_sim
+    """
     d_cat = {
         'g':'Gompertz',
         'l':'Logistic',
@@ -146,6 +239,15 @@ def get_d_plt(type_dif,array,delta,type_graph,y_val=None,l_inf=9999999999.0):
     return d_plt
 #________________________________________________
 def matrix_plt(axes_list, max_col=None):
+    """
+    Crea una matriz de graficos concatenando a la derecha
+    Parameters:
+        axes_list(ls[ax]): Lista de ax que viene de plt.subplots()
+        max_col (int): Numero maximo de columnas cuando revasa del 
+            maximo ase agrega como fila
+    Returns:
+        objeto plt.subplots relacionado al grafico
+    """
     if not axes_list:
         raise ValueError("La lista de ejes no puede estar vacía")
 
@@ -185,6 +287,15 @@ def matrix_plt(axes_list, max_col=None):
     return fig_final, axes
 #________________________________________________
 def interval_95(array):
+    """
+    Calcula el intervalo de confianza 95 a los 
+    valores del array
+    Parameters:
+        array (np.array): Array
+    Returns:
+        lista con 2 valores intervalo inferior 
+        e intervalo superior
+    """
     mean = np.mean(array)
     std_dev = np.std(array, ddof=1)  # Desviación estándar muestral
     std_err = std_dev / np.sqrt(len(array))  # Error estándar
@@ -193,6 +304,23 @@ def interval_95(array):
     return inf, sup
 #________________________________________________
 def matrix_sel(df,type_exe,type_estimation):
+    """
+    Selecciona la lista de columnas segun el tipo
+    Parameters:
+        df(pd.DataFrame): De resultados
+        type_exe('sim'|'em'): Tipo de ejecución
+            sim:Trayectoria con informacion completa
+            em:Trayectoria con informacion incompleta 
+                y reconstruida
+        type_estimation('qua'|'mle'): Tipo de estimador
+            qua: Estinador sigma
+            mle: Estimador parametro segun el modelo
+                g:beta
+                l:r
+                v:kappa
+    Returns:
+        pd:DataFrame con columnas seleccionadas
+    """
     name_param = 'real_value' if type_estimation == 'mle' else 'sigma'
     ls_sel = [
         'type_model',

@@ -4,20 +4,11 @@ from psm.integ_mod import integrate
 def qua_var_g(array, delta):
     """
     Calcula la variación cuadrática para el modelo Gompertz
-
     Parameters
-    ----------
-    npoints : int
-        Número de observaciones
-    path : numpy.ndarray
-        Observaciones de la SDE (ecuación diferencial estocástica)
-    delta : float
-        Incremento del proceso de Wiener
-
+    array (np.array): Array de trayectoria Gompertz
+    delta (float): Incremento del proceso de Wiener
     Returns
-    -------
-    sigmahat : float
-        Estimador sigma
+        np.float Estimador sigma
     """
     # Inicialización de las variables
     l_a = len(array)
@@ -57,21 +48,12 @@ def qua_var_g(array, delta):
 #________________________________________________
 def qua_var_l(array, delta):
     """
-    Calcula la variación cuadrática para el modelo Lofistic
-
+    Calcula la variación cuadrática para el modelo Logistic
     Parameters
-    ----------
-    npoints : int
-        Número de observaciones
-    path : numpy.ndarray
-        Observaciones de la SDE (ecuación diferencial estocástica)
-    delta : float
-        Incremento del proceso de Wiener
-
+    array (np.array): Array de trayectoria Logistic
+    delta (float): Incremento del proceso de Wiener
     Returns
-    -------
-    sigmahat : float
-        Estimador sigma
+        np.float Estimador sigma
     """
     # Calcular num y dem mediante un bucle
     differences = np.diff(array)
@@ -112,6 +94,18 @@ def qua_var_v(array, delta, l_inf=9999999999.0):
     return sigmahat
 #________________________________________________
 def qua_var(type_dif, array, delta, l_inf=9999999999.0):
+    """
+    Simulación de trayectoria segun el modelo
+    Parameters
+        type_dif ('g'|'l'|'v'): Tipo de modelo
+            g:Gompertz
+            l:Logistic
+            v:Von Bert
+        array (np.array): Array de trayectoria Logistic
+        delta (float): Incremento del proceso de Wiener
+    Returns
+        np.float Estimador sigma
+    """
     if type_dif in {'g'}:
         y = qua_var_g(array, delta)
     elif type_dif in {'l'}:

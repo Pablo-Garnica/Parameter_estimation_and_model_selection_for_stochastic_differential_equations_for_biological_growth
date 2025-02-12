@@ -4,12 +4,9 @@ from psm.integ_mod import *
 def mle_g(array, delta):
     """
     Calcula el MLE (Maximum Likelihood Estimator) para el modelo Gompertz.
-
     Parameters:
-        npoints (int): Número de observaciones.
-        path (numpy.ndarray): Observaciones de la SDE (stochastic differential equation).
-        delta (float): Incremento del proceso de Wiener.
-
+        array (np.array): Array de trayectoria Gompertz
+        delta (float): Incremento del proceso de Wiener
     Returns:
         float: Estimado b.
     """
@@ -31,15 +28,12 @@ def mle_g(array, delta):
 #________________________________________________
 def mle_l(array, delta):
     """
-    Calcula el MLE (Maximum Likelihood Estimator) para el modelo Logístico.
-
+    Calcula el MLE (Maximum Likelihood Estimator) para el modelo Logistic.
     Parameters:
-        npoints (int): Número de observaciones.
-        path (numpy.ndarray): Observaciones de la SDE (stochastic differential equation).
-        delta (float): Incremento del proceso de Wiener.
-
+        array (np.array): Array de trayectoria Logistic
+        delta (float): Incremento del proceso de Wiener
     Returns:
-        float: Estimador r.
+        float: Estimado r.
     """
     array_0 = (1.0 - array)
     array_1 = array_0/ array
@@ -50,16 +44,13 @@ def mle_l(array, delta):
 #________________________________________________
 def mle_v(array, delta, l_inf=9999999999.0):
     """
-    Calcula el MLE (Maximum Likelihood Estimator) para el modelo Von Bertalanffy.
-
+    Calcula el MLE (Maximum Likelihood Estimator) para el modelo Von Bert.
     Parameters:
-        npoints (int): Número de observaciones.
-        path (numpy.ndarray): Observaciones de la SDE (stochastic differential equation).
-        delta (float): Incremento del proceso de Wiener.
-        l_inf (float): Límite superior.
-
+        array (np.array): Array de trayectoria Von Bert
+        delta (float): Incremento del proceso de Wiener
+        l_inf (float): Limite superior
     Returns:
-        float: Estimador kappa.
+        float: Estimado kappa.
     """
     l_a = len(array)
     time = delta * (l_a - 1)
@@ -69,6 +60,15 @@ def mle_v(array, delta, l_inf=9999999999.0):
     return kappahat
 #________________________________________________
 def mle_(type_dif, array, delta, l_inf=9999999999.0):
+    """
+    Calcula el MLE (Maximum Likelihood Estimator) segun el modelo.
+    Parameters:
+        array (np.array): Array de trayectoria segun el modelo
+        delta (float): Incremento del proceso de Wiener
+        l_inf (float): Limite superior
+    Returns:
+        float: Estimado del parametro segun el modelo.
+    """
     if type_dif in {'g'}:
         y = mle_g(array, delta)
     elif type_dif in {'l'}:
@@ -81,15 +81,12 @@ def mle_(type_dif, array, delta, l_inf=9999999999.0):
 #________________________________________________
 def mle_times(array, delta,size ,l_inf=9999999999.0):
     """
-    Calcula el MLE (Maximum Likelihood Estimator).
-
+    Calcula el MLE (Maximum Likelihood Estimator)
     Parameters:
-        path (numpy.ndarray): Observaciones.
-        delta (float): Incremento del proceso de Wiener.
-        linf (float): Límite superior.
-        size (int): Número de segmentos para calcular MLE.
-        npoints (int): Número total de observaciones.
-
+        array (np.array): Array de trayectoria
+        delta (float): Incremento del proceso de Wiener
+        size (int): Tamaño de la muestra
+        l_inf (float): Limite superior
     Returns:
         tuple: Arrays con los valores de sigmahat y kappahat.
     """
@@ -107,12 +104,9 @@ def mle_times(array, delta,size ,l_inf=9999999999.0):
 def mle_gb(array, delta):
     """
     Calcula el MLE (Maximum Likelihood Estimator) para el modelo Geo Brown.
-
     Parameters:
-        path (numpy.ndarray): Observaciones transformadas.
-        delta (float): Incremento del proceso de Wiener.
-        npoints (int): Número de observaciones.
-
+        array (np.array): Array de trayectoria
+        delta (float): Incremento del proceso de Wiener
     Returns:
         tuple: sigmahat y kappahat.
     """

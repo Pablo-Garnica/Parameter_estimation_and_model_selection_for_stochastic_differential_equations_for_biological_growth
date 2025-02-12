@@ -62,6 +62,11 @@ d_param_m = {
 }
 #________________________________________________
 def input_general_param(flg_print=False):
+    """
+    Flujo de parametros generales
+    Returns:
+        diccionario con parametros generales
+    """
     d_flow = {}
     d_exe = {}
     try:
@@ -106,6 +111,23 @@ def input_general_param(flg_print=False):
     return d_exe
 #________________________________________________
 def normal_exe(type_dif,param,sigma,delta,start,n_iter,l_inf,d_flow,flg_print=False):
+    """
+    Flujo de ejecución normal
+    Parameters:
+        type_dif ('g'|'l'|'v'): Tipo de modelo
+            g:Gompertz
+            l:Logistic
+            v:Von Bert
+        param (float): Valor del parametro segun el modelo
+            g:beta
+            l:r
+            v:kappa
+        sigma (float): Valor sigma
+        delta (float): Incremento del proceso de Wiener
+        start (float): Valor inicial del movimiento Browniano
+        n_iter (int): Numero de iteraciones
+        l_inf (float): Limite superior
+    """
     print(type_dif,param,sigma,delta,start,n_iter,l_inf,d_flow)
     array_0 = sim(type_dif,param,sigma,delta,start,n_iter,l_inf)
     qua =  qua_var(type_dif,array_0,delta)
@@ -129,6 +151,23 @@ def normal_exe(type_dif,param,sigma,delta,start,n_iter,l_inf,d_flow,flg_print=Fa
     return d_return
 #________________________________________________
 def trajectories_exe(type_dif,param,sigma,delta,start,n_iter,l_inf,d_flow,flg_print):
+    """
+    Flujo de ejecución para selección de trayectorias
+    Parameters:
+        type_dif ('g'|'l'|'v'): Tipo de modelo
+            g:Gompertz
+            l:Logistic
+            v:Von Bert
+        param (float): Valor del parametro segun el modelo
+            g:beta
+            l:r
+            v:kappa
+        sigma (float): Valor sigma
+        delta (float): Incremento del proceso de Wiener
+        start (float): Valor inicial del movimiento Browniano
+        n_iter (int): Numero de iteraciones
+        l_inf (float): Limite superior
+    """
     n_reply = int(input(msg_n_reply))
     n_step = int(input(msg_n_step))
 
@@ -157,6 +196,23 @@ def trajectories_exe(type_dif,param,sigma,delta,start,n_iter,l_inf,d_flow,flg_pr
     return d_retun
 #________________________________________________
 def em_exe(type_dif,param,sigma,delta,start,n_iter,l_inf,d_flow,flg_print):
+    """
+    Flujo de ejecución información incompleta
+    Parameters:
+        type_dif ('g'|'l'|'v'): Tipo de modelo
+            g:Gompertz
+            l:Logistic
+            v:Von Bert
+        param (float): Valor del parametro segun el modelo
+            g:beta
+            l:r
+            v:kappa
+        sigma (float): Valor sigma
+        delta (float): Incremento del proceso de Wiener
+        start (float): Valor inicial del movimiento Browniano
+        n_iter (int): Numero de iteraciones
+        l_inf (float): Limite superior
+    """
     n_reply = int(input(msg_n_reply))
     n_obs = int(input(msg_n_obs))
     #
@@ -165,56 +221,15 @@ def em_exe(type_dif,param,sigma,delta,start,n_iter,l_inf,d_flow,flg_print):
         print(f'n_obs:{n_obs}')
     #
     n_iter_chose = n_iter//n_obs
-    # d_r = em_mc(type_dif, param, sigma,start,n_obs, delta, n_iter, n_reply, l_inf)
-    # # # for type_dif in ls_type:
-    # # array_0 = sim(type_dif,param,sigma,delta,start,n_iter,l_inf)
-    # # param_vec, sigma_vec, array_conat = em_mc(
-    # #         type_dif, 
-    # #         param, 
-    # #         sigma, 
-    # #         array_0, 
-    # #         n_obs, 
-    # #         delta, 
-    # #         n_iter_chose, 
-    # #         n_reply,
-    # #         n_error=1,
-    # #         l_inf=l_inf
-    # #     )
-    
-    # # qua =  qua_var(type_dif,array_0,delta)
-    # # aic = aic_(type_dif, array_0, delta, param, sigma)
-    # # mle = mle_(type_dif, array_0, delta)
-    # param_vec=d_r['mle']
-    # sigma_vec=d_r['qua']
-    # param_mean = np.mean(d_r['mle'])
-    # sigma_mean = np.mean(d_r['qua'])
-    # d_flow = d_flow | {
-    #     # 'array_conat':array_conat,
-    #     # 'qua':qua,
-    #     # 'aic':aic,
-    #     # 'mle':mle,
-    #     'param_vec':param_vec,
-    #     'sigma_vec':sigma_vec,
-    #     'param_mean':param_mean,
-    #     'sigma_mean':sigma_mean,
-    # }
-    # d_retun = {
-    #     # 'array_sim':array_0,
-    #     # 'array_conat':array_conat,
-    #     'param_vec':param_vec,
-    #     'sigma_vec':sigma_vec,
-    #     'param_mean':param_mean,
-    #     'sigma_mean':sigma_mean,
-    #     # 'qua_sim':qua,
-    #     # 'aic_sim':aic,
-    #     # 'mle_sim':mle,
-    # }
-    # x = input(msg_e_ex.format(**d_flow))
-    # if flg_print:
-    #     print(msg_e_ex.format(**d_flow))
-    # return d_retun
 #________________________________________________
 def input_type_exe(d_exe,flg_print=False):
+    """
+    Flujo de ejecución segun la elección de tipo
+    Parameters:
+        d_exe: output de input_general_param
+    Returns:
+        diccionario con información del la ejecución
+    """
     type_execute = input(msg_type_execute)
     if flg_print:
         print(f'type_execute:{type_execute}')
@@ -228,6 +243,12 @@ def input_type_exe(d_exe,flg_print=False):
         raise RuntimeError('type_execute debe estar en {"n","t","e"}')
 #_________________________________________________________________
 def input_plt(d_exe,d_f):
+    """
+    Flujo para exportar dato y graficos del modelo
+    Parameters:
+        d_exe: output de input_general_param
+        d_f: output de normal_exe
+    """
     if d_f['type_execute'] == 'n':
         plt_type = input(msg_plt_type)
         #_________________________________________________________________

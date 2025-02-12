@@ -2,6 +2,19 @@ import numpy as np
 from scipy.stats import truncnorm
 #________________________________________________
 def difussion_param(x,sigma,type_dif,l_inf=9999999999.0):
+    """
+    Calcula el parametro diffusion
+    Parameters:
+        x (float): Valor en el que se evalua la diffusion
+        sigma (float): Valor sigma
+        type_dif ('g'|'l'|'v'): Tipo de modelo
+            g:Gompertz
+            l:Logistic
+            v:Von Bert
+        l_inf (float): Limite superior
+    Returns:
+        np.float parametro diffusion
+    """
     if type_dif in {'l','g'}:
         y=sigma*x
     elif type_dif in {'v'}:
@@ -11,6 +24,19 @@ def difussion_param(x,sigma,type_dif,l_inf=9999999999.0):
     return y
 #________________________________________________
 def drift_param(x,param,type_dif,l_inf=9999999999.0):
+    """
+    Calcula el parametro drift
+    Parameters:
+        x (float): Valor en el que se evalua la diffusion
+        sigma (float): Valor sigma
+        type_dif ('g'|'l'|'v'): Tipo de modelo
+            g:Gompertz
+            l:Logistic
+            v:Von Bert
+        l_inf (float): Limite superior
+    Returns:
+        np.float parametro drift
+    """
     if type_dif in {'g'}:
         y=-param*x*np.log(x)
     elif type_dif in {'l'}:
@@ -22,6 +48,17 @@ def drift_param(x,param,type_dif,l_inf=9999999999.0):
     return y
 #________________________________________________
 def milstein_step(start,delta,drift,diff,sigma):
+    """
+    Aplica el metodo Milstein para resolver ecuaciones estocasticas
+    Parameters:
+        start (float): Valor inicial del movimiento Browniano
+        delta (float): Incremento del proceso de Wiener
+        drift (float): Valor drift
+        diff (float): Valor driffucion
+        sigma (float): Valor sigma
+    Returns:
+        np.float Simulación de resolucion de ecuaciones estocasticas
+    """
     x = np.random.normal()
     #Paso browneano
     w = np.sqrt(delta) * x
@@ -29,6 +66,26 @@ def milstein_step(start,delta,drift,diff,sigma):
     return end
 #________________________________________________
 def sim(type_dif,param,sigma,delta,start,n_iter,l_inf=9999999999.0,flg_print=False):
+    """
+    Simulación de trayectoria segun el modelo
+    Parameters:
+        type_dif ('g'|'l'|'v'): Tipo de modelo
+            g:Gompertz
+            l:Logistic
+            v:Von Bert
+        param (float): Valor del parametro segun el modelo
+            g:beta
+            l:r
+            v:kappa
+        sigma (float): Valor sigma
+        delta (float): Incremento del proceso de Wiener
+        start (float): Valor inicial del movimiento Browniano
+        n_iter (int): Numero de iteraciones
+        l_inf (float): Limite superior
+        flg_print (bool): Flg para ejecutar prints o no
+    Returns:
+        np.array simulacion segun el modelo
+    """
     array = np.array([])
     for i in range(0,n_iter):
         if flg_print:
@@ -49,6 +106,27 @@ def sim(type_dif,param,sigma,delta,start,n_iter,l_inf=9999999999.0,flg_print=Fal
     return array
 #________________________________________________
 def sim_reply(type_dif,param,sigma,delta,start,n_iter,n_reply,l_inf=9999999999.0,flg_print=False):
+    """
+    Simulación de trayectoria segun el modelo
+    Parameters:
+        type_dif ('g'|'l'|'v'): Tipo de modelo
+            g:Gompertz
+            l:Logistic
+            v:Von Bert
+        param (float): Valor del parametro segun el modelo
+            g:beta
+            l:r
+            v:kappa
+        sigma (float): Valor sigma
+        delta (float): Incremento del proceso de Wiener
+        start (float): Valor inicial del movimiento Browniano
+        n_iter (int): Numero de iteraciones
+        n_reply (int): Numero de trayectorias generadas
+        l_inf (float): Limite superior
+        flg_print (bool): Flg para ejecutar prints o no
+    Returns:
+        np.array simulaciones de tamaño n_iter * n_reply
+    """
     for i in range(0,n_reply):
         if flg_print:
             iter_batch = np.ceil(n_reply/100)
@@ -69,14 +147,10 @@ def sim_reply(type_dif,param,sigma,delta,start,n_iter,n_reply,l_inf=9999999999.0
 def sim_choose(array, n_steps, l_inf=9999999999.0):
     """
     Elige una trayectoria a partir de una serie de trayectorias.
-
     Parameters:
-        path (numpy.ndarray): Matriz de iteraciones con los valores simulados (shape: niter x npoints).
-        npoints (int): Tamaño de la simulación.
-        nsteps (int): Número de pasos para el algoritmo.
-        niter (int): Número de iteraciones.
-        linf (float, optional): Límite superior. Si no se especifica, se establece a un valor muy alto.
-
+        array (numpy.ndarray): Matriz de iteraciones con los valores simulados (shape: niter x npoints).
+        n_steps (int): Número de pasos para el algoritmo.
+        l_inf (float, optional): Límite superior. Si no se especifica, se establece a un valor muy alto.
     Returns:
         numpy.ndarray: Matriz de trayectorias seleccionadas (shape: n_steps).
     """
@@ -97,13 +171,10 @@ def sim_choose(array, n_steps, l_inf=9999999999.0):
 def choose_obs(array, obs, l_inf=9999999999.0):
     """
     Realiza una selección basada en observaciones previas y distribuciones truncadas.
-
     Parameters:
-        sample (numpy.ndarray): Muestra actual (1D array).
-        ss (int): Tamaño de la muestra.
+        array (numpy.ndarray): Muestra actual (1D array).
         obs (float): Observación previa.
-        linf (float): Límite superior.
-
+        l_inf (float): Límite superior.
     Returns:
         float: Nueva observación seleccionada.
     """
