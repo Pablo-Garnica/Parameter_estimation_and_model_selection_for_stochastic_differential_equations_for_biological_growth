@@ -19,6 +19,7 @@ contains
         integer, intent(in) :: npoints
         real*8, intent(out) :: aic
         real*8 :: path(npoints),I1,I2,pathint1(npoints),pathint2(npoints)
+        ! lpath(:)=LOG(path(:))
         pathint1(:)=-(b*path(:)*LOG(path(:)))/((sigma**2)*(path(:)**2))
         pathint2(:)=((b**2)*(path(:)**2))/((sigma**2)*(path(:)**2))
         call ItoIntegrate(npoints,pathint1,path,I1)

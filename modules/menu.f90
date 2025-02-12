@@ -1,10 +1,12 @@
 module menu
+    use usefull_func
     use rand_seed
     use simulation
     use mle
     use qua
     use aic
     use rand_seed
+    use em
     implicit none
     contains
     subroutine menu_random_seed()
@@ -124,7 +126,32 @@ module menu
             print *, "Error"
         end if
     end subroutine
-    subroutine menu_input_param(type_model,model_param,sigma,delta,xstart,npoints,linf)
+
+
+    subroutine menu_type_execution(type_execution)
+        !-------------------------------------------------------------------
+        !> \brief Nos da el input si se tiene que ejecutar el algoritmo em
+        ! 
+        !> \param[in] type_execution(character) Si el parametro es "y" entonces
+        !> se ejecuta el algoritmo em, en otro caso no se ejecuta
+        !-------------------------------------------------------------------
+        character, intent(out) :: type_execution
+        print *, "-------------------------------------------------------------------"
+        print *, "Que tipo de ejecición desea aplicar"
+        print *, "'n' : Ejecución normal del modelo"
+        print *, "'t' : Ejecución del modelo para seleccionar trayectoria"
+        print *, "'e' : Ejecución ocupando el algoritmo em"
+        read *, type_execution            
+    end subroutine
+
+
+
+
+
+
+
+    subroutine menu_input_param(type_model,type_execution,model_param,sigma,delta,xstart,npoints,&
+            nobs,niter,nsteps,nmc,linf)
         !-------------------------------------------------------------------
         !> \brief La aplicación de consola hace que el usuario agregue los 
         !> inputs segun el modelo
@@ -145,9 +172,9 @@ module menu
         !> \param[out] npoints(integer) Tamaño de la simulación
         !> \param[out] linf[optional](real*8) Limite superior
         !-------------------------------------------------------------------
-        character, intent(in) :: type_model
+        character, intent(in) :: type_model,type_execution
         real*8, intent(out) :: model_param,sigma,delta,xstart
-        integer, intent(out) :: npoints
+        integer, intent(out) :: npoints,nobs,niter,nsteps,nmc
         real*8, intent(out), optional :: linf
         character*20 :: name_model,model_name_param
         character*100 :: param_recom,sigma_recom,delta_recom,xstart_recom,npoints_recom
@@ -179,9 +206,37 @@ module menu
         if (type_model.eq."v") then
             print *, "Limite superior : ",linf
         end if
+        if (type_execution.eq."t") then
+            print *, "-------------------------------------------------------------------"
+            print *, "Introduce el numero de iteraciones del modelo para seleccionar"
+            print *, "la trayectoria" 
+            read*,niter
+            print *, "-------------------------------------------------------------------"
+            print *, "Introduce el numero de pasos para ejecutar el modelo para "
+            print *, "seleccionar la trayectoria" 
+            read*,nsteps
+        end if
+        if (type_execution.eq."e") then
+            print *, "-------------------------------------------------------------------"
+            print *, "Introduce el numero de para realizar la muestra del y ejecutar "
+            print *, "el modelo em"
+            read*,nobs
+            print *, "-------------------------------------------------------------------"
+            print *, "Introduce el numero de iteraciones del modelo ejecutar el modelo"
+            print *, "em" 
+            read*,niter
+            print *, "-------------------------------------------------------------------"
+            print *, "Introduce el numero de pasos del modelo ejecutar el modelo"
+            print *, "em" 
+            read*,nsteps
+            print *, "-------------------------------------------------------------------"
+            print *, "Introduce el nmc del modelo ejecutar el modelo em"
+            read*,nmc
+        end if
         print *, "-------------------------------------------------------------------"
     end subroutine
-    subroutine menu_result(type_model,model_param,sigma,delta,xstart,npoints,linf,paramhat,sigmahat,aic_param,path)
+    subroutine menu_result(type_model,type_execution,model_param,sigma,delta,xstart,npoints,nobs,&
+            niter,nsteps,nmc,linf,paramhat,sigmahat,aic_param,path)
         !-------------------------------------------------------------------
         !> \brief Calcula y muestra los valores MLE (Maximum Likelihood 
         !> Estimator), AIC (Akaike information criterion), Quadratic 
@@ -192,6 +247,10 @@ module menu
         !>   "v" : Para el modelo Von Bert
         !>   "g" : Para el modelo Gompertz
         !>   "l" : Para el modelo Logistic
+        !> \param[in] type_execution(character) Debe de estar en los siguientes
+        !>   "n" : Ejecución normal del modelo
+        !>   "t" : Ejecución del modelo para seleccionar trayectoria
+        !>   "e" : Ejecución ocupando el alhoritmo em
         !> \param[in] model_param(real*8) ????
         !> \param[in] sigma(real*8) Valor de ?????
         !> \param[out] sigma(real*8) ????
@@ -205,25 +264,64 @@ module menu
         !> \param[out] aic_param(real*8) AIC (Akaike information criterion)
         !> \param[out] Path de simulación
         !-------------------------------------------------------------------
-        character, intent(in) :: type_model
+        character, intent(in) :: type_model,type_execution
         real*8, intent(in) :: model_param,sigma,delta,xstart
-        integer, intent(in) :: npoints
+        integer, intent(in) :: npoints,nobs,niter,nsteps,nmc
         real*8, intent(in), optional :: linf
         real*8, intent(out) :: paramhat,sigmahat,aic_param
         real*8, intent(out) :: path(npoints)
         character*20 :: name_model,model_name_param
         character*100 :: param_recom,sigma_recom,delta_recom,xstart_recom,npoints_recom
+        real*8 :: path_iter(niter,npoints),path_out(nsteps),path_out_e(nobs)
+        real*8 :: delta_bridge
+        real*8 :: sigma_vec(nmc),beta_vec(nmc)
+
         call dict_models(type_model,name_model,model_name_param, &
         param_recom,sigma_recom,delta_recom,xstart_recom,npoints_recom)
-        call SIM(type_model,model_param,sigma,delta,xstart,npoints,path,linf)
-        call MLE_(type_model,npoints,path,delta,paramhat,linf)
-        call Qua_Var(type_model,npoints,path,delta,sigmahat,linf)
-        call AIC_(type_model,delta,paramhat,sigmahat,npoints,path,aic_param,linf)
-        print *, "Quadratic variation : ",sigmahat
-        print *, "MLE (Maximum Likelihood Estimator) : ",trim(model_name_param) ,"hat : ",paramhat
-        print *, "AIC (Akaike information criterion) : ",aic_param
-        print *, "-------------------------------------------------------------------"
-        print *, "-------------------------------------------------------------------"
+
+
+        if (type_execution.eq."n") then
+            call SIM(type_model,model_param,sigma,delta,xstart,npoints,path,linf)
+            call MLE_(type_model,npoints,path,delta,paramhat,linf)
+            call Qua_Var(type_model,npoints,path,delta,sigmahat,linf)
+            call AIC_(type_model,delta,paramhat,sigmahat,npoints,path,aic_param,linf)
+            print *, "Quadratic variation : ",sigmahat
+            print *, "MLE (Maximum Likelihood Estimator) : ",trim(model_name_param) ,"hat : ",paramhat
+            print *, "AIC (Akaike information criterion) : ",aic_param
+            print *, "-------------------------------------------------------------------"
+            print *, "-------------------------------------------------------------------"
+
+        else if (type_execution.eq."t") then
+            ! Simulación de elección de trayectorias
+            ! Necesita niter y nsteps
+            call SIM_ITER(type_model,model_param,sigma,delta,xstart,npoints,niter,path_iter,linf)
+            call SIM_CHOOSE(path_iter,npoints,niter,nsteps,path_out,linf)
+            call MLE_(type_model,nsteps,path_out,delta,paramhat,linf)
+            call Qua_Var(type_model,nsteps,path_out,delta,sigmahat,linf)
+            call AIC_(type_model,delta,paramhat,sigmahat,nsteps,path_out,aic_param,linf)
+            print *, "Quadratic variation : ",sigmahat
+            print *, "MLE (Maximum Likelihood Estimator) : ",trim(model_name_param) ,"hat : ",paramhat
+            print *, "AIC (Akaike information criterion) : ",aic_param
+            print *, "-------------------------------------------------------------------"
+            print *, "-------------------------------------------------------------------"  
+        else if (type_execution.eq."e") then
+            print*,'En construcción em'
+
+            call SIM(type_model,model_param,sigma,delta,xstart,npoints,path,linf)
+            
+            call choose_data(delta,npoints,path,nobs,delta_bridge,path_out_e)
+            print*,'choose_data',path_out_e
+
+            call EM_MC(type_model,model_param,sigma,path_out_e,nobs,delta_bridge,niter,nmc,nsteps,sigma_vec,beta_vec,linf)
+
+            print *, "Quadratic variation : ",sigma_vec
+            print *, "MLE (Maximum Likelihood Estimator) : ",trim(model_name_param) ,"hat : ",beta_vec
+
+            print *, "-------------------------------------------------------------------"
+            print *, "-------------------------------------------------------------------"  
+        else
+            print *, "Error"
+        end if
     end subroutine
     subroutine date_char(date)
         !-------------------------------------------------------------------
@@ -288,6 +386,92 @@ module menu
             close(1)
             print*,"Se exporto exitosamente el archivo: ",trim(name_file)
             print *, "-------------------------------------------------------------------"
+        else
+            print *, "-------------------------------------------------------------------"
+        end if
+    end subroutine
+    subroutine menu_export_params(type_model,path_sim,npoints,param_1,sigma_1,delta,linf)
+        !-------------------------------------------------------------------
+        !> \brief Menu que pregunta si quiere exportar la simulación
+        !> Si se exporta se hace con el nombre 
+        !> [nombre_modelo][fecha_hora].txt
+        !>
+        !> \param[in] type_model(character) Debe de estar en los siguientes 
+        !> valores:
+        !>   "v" : Para el modelo Von Bert
+        !>   "g" : Para el modelo Gompertz
+        !>   "l" : Para el modelo Logistic
+        !> \param[in] path(real*8) Matriz de la simulación que se quiere
+        !> exportar
+        !> \param[in] npoints(integer) Tamaño de la simulación
+        !-------------------------------------------------------------------
+        character, intent(in) :: type_model
+        integer, intent(in) :: npoints
+        real*8, intent(in) :: path_sim(npoints),param_1,sigma_1,delta
+        real*8 :: path_sigma(npoints),path_param(npoints)
+        character :: option
+        character*14 :: date
+        character*50 :: name_file,name_file_exp
+        integer :: i
+        real*8, intent(in) , optional :: linf
+        real*8 inf, time
+        if (present(linf)) then
+            inf = linf
+        else
+            inf = 999999999999999999999999999999.00
+        end if
+        print *, "Quiere exportar la simulacion"
+        print *, "'y' para estar exportar, cualquier otro valor para NO exportar"
+        read*,option
+        if (option.eq."y") then
+
+            path_sigma(1) = param_1
+            path_param(1) = sigma_1
+            do i=2,npoints
+                call MLE_(type_model,i,path_sim(1:i),delta,path_param(i),inf)
+                call Qua_Var(type_model,i,path_sim(1:i),delta,path_sigma(i),inf)
+            end do
+
+            call date_char(date)
+            if (type_model.eq."g") then
+                name_file = "gompertz_"
+            else if (type_model.eq."l") then
+                name_file = "logistic_"
+            else if (type_model.eq."v") then
+                name_file = "von_bert_"
+            else
+                print *, "Error"
+            end if
+            name_file_exp = trim(name_file) // "param.txt"
+            open(1,file=name_file_exp)
+            write(1,*) path_param
+            endfile(1)
+            close(1)
+            print*,"Se exporto exitosamente el archivo: ",trim(name_file)
+            print *, "-------------------------------------------------------------------"
+            name_file_exp = trim(name_file) // "sigma.txt"
+            open(2,file=name_file_exp)
+            write(2,*) path_sigma
+            endfile(2)
+            close(2)
+
+            name_file_exp = trim(name_file) // "sigma_input.txt"
+            open(3,file=name_file_exp)
+            write(3,*) sigma_1
+            endfile(3)
+            close(3)
+
+            name_file_exp = trim(name_file) // "param_input.txt"
+            open(4,file=name_file_exp)
+            write(4,*) param_1
+            endfile(4)
+            close(4)
+            time = npoints * delta
+            name_file_exp = trim(name_file) // "time.txt"
+            open(5,file=name_file_exp)
+            write(5,*) time
+            endfile(5)
+            close(5)
         else
             print *, "-------------------------------------------------------------------"
         end if

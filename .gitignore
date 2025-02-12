@@ -1,5 +1,10 @@
 extra/
 .vscode/
+build/plot_sim/
+dist/
 Proximos pasos.txt
 parallel_example.f90
 Proximos pasos.txt
+.env/
+ejemplo.ipynb
+EM dudas.pptx
